@@ -1,0 +1,14 @@
+{% extends "words.html" %}
+
+{% block title %}Лексемы{% endblock %}
+
+{% block header %}<h4 class="mb-3">Лексемы</h4>{% endblock %}
+
+{% block name %}<a class="navbar-brand" href="#">{{ file.name }}</a>{% endblock %}
+
+{% block filebar %}
+<div class="navbar-nav">
+    <a class="nav-link" href="{% url 'analyze_list' file.id %}">Лексемы по алфавиту</a>
+    <a class="nav-link" href="{% url 'document_view' file.id %}">Документ</a>
+</div>
+{% endblock %}

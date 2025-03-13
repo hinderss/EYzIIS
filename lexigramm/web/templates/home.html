@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h1 class="text-center">Welcome to My Django App</h1>
+        <p class="lead text-center">This is a sample page using Django-Bootstrap5.</p>
+
+        <!-- Bootstrap Alert -->
+        <div class="alert alert-success" role="alert">
+            Success! You've integrated Bootstrap5 with Django.
+        </div>
+
+        <!-- Bootstrap Button -->
+        <button type="button" class="btn btn-primary">Click Me</button>
+
+        <!-- Bootstrap Form -->
+        <form method="post" class="mt-4">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% bootstrap_button "Submit" button_type="submit" button_class="btn-primary" %}
+        </form>
+    </div>
+</div>
+{% endblock %}

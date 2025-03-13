@@ -1,0 +1,283 @@
+{% load bootstrap5 %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Документы{% endblock %}</title>
+    {% bootstrap_css %}
+    <style>
+        body {
+            background-color: #f8f9fa;
+            overflow: scroll; /* Принудительная прокрутка */
+        }
+        .logo {
+            background-color: #fff;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .nav-bar {
+            display: flex;
+            justify-content: center;
+            background-color: #fff;
+            padding: 10px;
+            border-bottom: 2px solid #ddd;
+        }
+        .nav-bar a {
+            text-decoration: none;
+            padding: 10px 20px;
+            color: #333;
+            font-weight: 500;
+        }
+        .nav-bar a:hover {
+            color: #007bff;
+        }
+        .container {
+            max-width: 900px;
+            margin-top: 20px;
+        }
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
+        <div class="container-fluid">
+            <div></div>
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="{% static 'icons/bootstrap-logo.svg' %}" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+                LexiGramm
+            </a>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#instructionModal">
+                ?
+            </button>
+        </div>
+    </nav>
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" style="background-color: #e3f2fd;">
+        <div class="container-fluid">
+            {% block name %}{% endblock %}
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                {% block filebar %}{% endblock %}
+                <div class="navbar-nav ms-auto">
+                    <div style="margin-left: 20px;">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">
+                            Поиск
+                        </button>
+                    </div>
+                    <div style="margin-left: 20px;">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                            Сгенерировать словоформу
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+   
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Сгенерировать словоформу</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{% url 'generate_wordform' %}">
+                        {% csrf_token %}
+                        {% bootstrap_form form %}
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                            <button type="submit" class="btn btn-primary">Сгенерировать</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Поиск</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{% url 'search_wordform' %}">
+                        {% csrf_token %}
+                        {% bootstrap_form search %}
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                            <button type="submit" class="btn btn-primary">Найти</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно с инструкцией -->
+        <div class="modal fade" id="instructionModal" tabindex="-1" aria-labelledby="instructionModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="instructionModalLabel">Инструкция для LexiGramm</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Основные функции</h4>
+                        <ul>
+                            <li><strong>Главная страница</strong>: Нажмите на логотип "LexiGramm" в верхней панели, чтобы вернуться на главную страницу.</li>
+                            <li><strong>Генерация словоформ</strong>:
+                                <ol>
+                                    <li>Нажмите кнопку "Сгенерировать словоформу".</li>
+                                    <li>Введите слово, выберите часть речи и нужную форму.</li>
+                                    <li>Нажмите "Сгенерировать". Результат появится в виде карточки.</li>
+                                </ol>
+                            </li>
+                            <li><strong>Поиск словоформ</strong>:
+                                <ol>
+                                    <li>Нажмите кнопку "Поиск".</li>
+                                    <li>Введите слово, уточните часть речи и форму (по желанию).</li>
+                                    <li>Нажмите "Найти". Результаты отобразятся списком.</li>
+                                </ol>
+                            </li>
+                        </ul>
+
+                        <h4>Работа с документами</h4>
+                        <ul>
+                            <li>На главной странице выберите нужный документ.</li>
+                            <li>Текст документа отображается в карточке с возможностью прокрутки.</li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    {% bootstrap_javascript %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const partOfSpeechSelect = document.getElementById("id_part_of_speech");
+            const featureSelect = document.getElementById("id_feature");
+        
+            const features = {
+                'VERB': [
+                    { value: 'VBD', text: 'Прошедшее время' },
+                    { value: 'VBZ', text: '3-е лицо единственного числа настоящего времени' },
+                    { value: 'VBG', text: 'Герундий/причастие настоящего времени' },
+                    { value: 'VBN', text: 'Причастие прошедшего времени' },
+                    { value: 'VB', text: 'Базовая форма' },
+                ],
+                'NOUN': [
+                    { value: 'NN', text: 'Единственное число' },
+                    { value: 'NNS', text: 'Множественное число' },
+                    { value: 'NNP', text: 'Имя собственное, единственное число' },
+                    { value: 'NNPS', text: 'Имя собственное, множественное число' },
+                ],
+                'ADJ': [
+                    { value: 'JJ', text: 'Прилагательное' },
+                    { value: 'JJR', text: 'Сравнительная степень' },
+                    { value: 'JJS', text: 'Превосходная степень' },
+                ],
+                'ADV': [
+                    { value: 'RB', text: 'Наречие' },
+                    { value: 'RBR', text: 'Сравнительная степень' },
+                    { value: 'RBS', text: 'Превосходная степень' },
+                ],
+            };
+        
+            partOfSpeechSelect.addEventListener("change", function() {
+                const selectedPart = this.value;
+                featureSelect.innerHTML = "";
+        
+                if (features[selectedPart]) {
+                    features[selectedPart].forEach(feature => {
+                        const option = document.createElement("option");
+                        option.value = feature.value;
+                        option.text = feature.text;
+                        featureSelect.add(option);
+                    });
+                }
+            });
+        
+            partOfSpeechSelect.dispatchEvent(new Event("change"));
+        });
+        </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const partOfSpeechSelect = document.getElementById("id_pos");
+                const featureSelect = document.getElementById("id_tag");
+            
+                const features = {
+                    'VERB': [
+                        { value: "", text: '' },
+                        { value: 'VBD', text: 'Прошедшее время' },
+                        { value: 'VBZ', text: '3-е лицо единственного числа настоящего времени' },
+                        { value: 'VBG', text: 'Герундий/причастие настоящего времени' },
+                        { value: 'VBN', text: 'Причастие прошедшего времени' },
+                        { value: 'VB', text: 'Базовая форма' },
+                    ],
+                    'NOUN': [
+                        { value: "", text: '' },
+                        { value: 'NN', text: 'Единственное число' },
+                        { value: 'NNS', text: 'Множественное число' },
+                        { value: 'NNP', text: 'Имя собственное, единственное число' },
+                        { value: 'NNPS', text: 'Имя собственное, множественное число' },
+                    ],
+                    'ADJ': [
+                        { value: "", text: '' },
+                        { value: 'JJ', text: 'Прилагательное' },
+                        { value: 'JJR', text: 'Сравнительная степень' },
+                        { value: 'JJS', text: 'Превосходная степень' },
+                    ],
+                    'ADV': [
+                        { value: "", text: '' },
+                        { value: 'RB', text: 'Наречие' },
+                        { value: 'RBR', text: 'Сравнительная степень' },
+                        { value: 'RBS', text: 'Превосходная степень' },
+                    ],
+                };
+            
+                partOfSpeechSelect.addEventListener("change", function() {
+                    const selectedPart = this.value;
+                    featureSelect.innerHTML = "";
+            
+                    if (features[selectedPart]) {
+                        features[selectedPart].forEach(feature => {
+                            const option = document.createElement("option");
+                            option.value = feature.value;
+                            option.text = feature.text;
+                            featureSelect.add(option);
+                        });
+                    }
+                });
+            
+                partOfSpeechSelect.dispatchEvent(new Event("change"));
+            });
+        </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

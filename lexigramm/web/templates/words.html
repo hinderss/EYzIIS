@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="card p-4">
+    {% block header %}{% endblock %}
+    <div class="mt-4">
+        <ol class="list-group list-group-numbered">
+            {% for word in words %}
+                <li class="list-group-item">
+                    <strong>{{ word.lemma }}</strong> <br>
+                    <small class="text-muted">Основа: {{ word.lemma_stem }}</small> <br>
+                    <small class="text-muted">Часть речи: {{ word.part_of_speech }}</small> <br>
+                    <small class="text-muted">Окончания:</small>
+                    <ul>
+                        {% for suffix in word.suffixes %}
+                            <li>
+                                <small class="text-muted">
+                                    <span class="badge text-bg-secondary" title="{{ suffix.inflection }}">-{{ suffix.suffix }}</span> : {{ suffix.explained }}</small>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <form action="{% url 'delete_word' word.id %}" method="post" class="mt-2">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                    </form>
+                </li>
+            {% empty %}
+                <li class="list-group-item text-muted">Нет данных</li>
+            {% endfor %}
+        </ol>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+{% endblock %}

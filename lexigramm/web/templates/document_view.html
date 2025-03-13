@@ -1,0 +1,13 @@
+{% extends "file.html" %}
+
+{% block title %}Документ{% endblock %}
+
+{% block name %}<a class="navbar-brand" href="#">{{ file.name }}</a>{% endblock %}
+
+{% block content %}
+<div class="card p-4">
+    <p>
+        {{ document_text|safe }}
+    </p>
+</div>
+{% endblock %}
